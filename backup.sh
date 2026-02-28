@@ -1,2 +1,3 @@
 Buckup.sh
 Clean pu old logs...
+DIR
