@@ -1,0 +1,15 @@
+name: Docker Build Check
+
+on:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cheout code
+        uses: actions/checkout@v3
+      
+      - name: Build Docker Image
+        run: docker build -t test-image .
