@@ -1,4 +1,4 @@
-name: Build and Push to Docker Hub
+name: CI/CD Pipeline
 
 on:
   push:
@@ -23,3 +23,18 @@ jobs:
           context: .
           push: true
           tags: devyaro/my-custom-page:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            docker pull devyaro/my-custom-page:latest
+            docker rm -f my-web || true
+            docker run -d -p 8080:80 --name my-web devyaro/my-custom-page:latest
