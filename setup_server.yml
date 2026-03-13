@@ -1,0 +1,51 @@
+---
+- name: Sepup my DevOps invironment
+  hosts: my_servers
+  become: yes
+
+  tasks:
+    - name: Ensure Git is installed
+      apt:
+        name: git
+        state: present
+        update_cache: yes
+
+    - name: Create a project directory
+      file:
+        path: /home/asef535/ansible_test_dir
+        state: directory
+        mode: "0755"
+        owner: "asef535"
+
+    - name: Deploy dynamic index.html from template
+      template:
+        src: index.html.j2
+        dest: /home/asef535/ansible_test_dir/index.html
+
+    - name: Ensure Docker is installed
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+      notify: restart docker
+
+    - name: Run my Nginx container via Ansible
+      community.docker.docker_container:
+        name: my-ansible-web
+        image: nginx:latest
+        state: started
+        restart_policy: always
+        ports:
+          - "9999:80"
+
+    - name: Ensure Docker service is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+    
+  handlers:
+    - name: restart docker
+      service:
+        name: docker
+        state: restarted
