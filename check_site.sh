@@ -15,9 +15,16 @@ if [ "$STATUS" == "200" ]; then
 else 
     echo -e "${RED}✘${NC} $(date): Site is ${RED}DOWN ($STATUS)${NC}. ${YELLOW}Trying to Restart${NC} ${CONTAINER_NAME}..."
 
-    docker restart $CONTAINER_NAME || (cd ~/devops-lab && docker-compose up -d)
-
+    docker restart $CONTAINER_NAME > /dev/null || (cd ~/devops-lab && docker-compose down && docker-compose up -d)
+    sleep 2
     NEW_STATUS=$(curl -s -o /dev/null -w "%{http_code}" $URL)
 
-    [ "$(docker ps -q -f name=^/${CONTAINER_NAME}$ -f status=running)" ] && echo -e "${GREEN}Restarting DONE(${NEW_STATUS})!!!${NC}"
+    [ "$(docker ps -q -f name=^/${CONTAINER_NAME}$ -f status=running)" ] && echo -e "${GREEN}---Restarting DONE(${NEW_STATUS})---${NC}"
+fi
+
+DISK_USAGE=$(df / | tail -1 | awk '{print $5}' | sed 's/%//')
+
+if [ "$DISK_USAGE" -gt 90 ]; then
+    echo "Disk is almost full! ($DISK_USAGE%). Cleaning Docker..."
+    docker system prune -f
 fi
