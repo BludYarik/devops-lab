@@ -1741,3 +1741,5 @@ Creating devops-lab_app-web_1      ... done
 [0;32m✔[0m Fri Mar 13 15:35:01 UTC 2026: Site is [0;32mUP (200)[0m
 [0;31m✘[0m Fri Mar 13 15:36:01 UTC 2026: Site is [0;31mDOWN (000)[0m. [1;33mTrying to Restart[0m devops-lab_app-web_1...
 [0;32m---Restarting DONE(200)---[0m
+[0;32m✔[0m Fri Mar 13 15:37:01 UTC 2026: Site is [0;32mUP (200)[0m
+[0;32m✔[0m Fri Mar 13 15:38:01 UTC 2026: Site is [0;32mUP (200)[0m

@@ -4,6 +4,12 @@
   become: yes
 
   tasks:
+
+    - name: Fixing template permission
+      file:
+        path: /home/asef535/devops-lab/index.html.j2
+        mode: "0644"
+
     - name: Ensure Git is installed
       apt:
         name: git
